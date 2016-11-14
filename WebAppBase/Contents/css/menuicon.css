@@ -1,0 +1,32 @@
+﻿.icons_24 {
+    height: 36px;
+    width: 100%;
+    min-width:35px;
+    padding-top:8px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.icons_24_home {
+    background-image:url(../images/menu/home24.png)
+}
+
+.icons_24_record {
+    background-image:url(../images/menu/rec24.png)
+}
+
+.icons_24_sum {
+    background-image:url(../images/menu/sum24.png)
+}
+
+.icons_24_spe {
+    background-image:url(../images/menu/spe24.png)
+}
+
+.icons_24_setting {
+    background-image:url(../images/menu/settings24.png)
+}
+
+.icons_24_report {
+    background-image:url(../images/menu/report24.png)
+}

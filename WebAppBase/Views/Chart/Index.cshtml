@@ -1,0 +1,306 @@
+﻿@using WebAppBase.App_GlobalResources
+@model WebAppBase.Models.Chart.ChartTargetModel
+@{
+    ViewBag.Title = "ShowChartPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@section Style
+{
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+
+    <style type="text/css">
+        .ChartAxis {
+            width:150px;
+        }
+    </style>
+}
+
+
+@section PrepareScriptBeforeRequestJS{
+    <!--Chart.js-->
+    <script src="@Url.Content("~/Contents/ChartJS/2.3.0/Chart.bundle.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/ChartJS/hammer.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/ChartJS/Chart.Zoom.js")" type="text/javascript"></script>
+}
+
+<h2>@Model.Title</h2>
+@using (Html.BeginForm())
+{
+    <div style="margin-top:5px; text-align:right;">
+        @if (Model.ZoomEnable) { 
+        <input id="btnResetZoom" name="btnResetZoom" style="width:80px;" type="button" value="リセット" />
+        }
+        @if (Model.ChartTypes.Length > 1 && Model.ChartTypes.Contains("line"))
+        {
+        <input id="btnGraphLineType" name="btnGraphLineType" class="btnBarType" bartype="line" style="width:80px;" type="button" value="折れ線" />
+        }
+        @if (Model.ChartTypes.Length > 1 && Model.ChartTypes.Contains("bar"))
+        {
+        <input id="btnGraphBarType" name="btnGraphBarType" class="btnBarType" bartype="bar" style="width:80px;" type="button" value="棒グラフ" />
+        }
+        <input id="btnBack" name="back" style="width:80px;" type="submit" value="戻る" />
+    </div>
+
+    <div>
+        <table id="searchCondition" style="margin-top:10px; margin-bottom:10px;float:left;">
+            <tr>
+                <td valign="middle">
+                    <span style="padding-right:10px;">項目</span>
+                </td>
+                @if (Model.ChartYAxisLables.Count > 0)
+                {
+                    var i = 0;
+                    var dic = Model.ChartYAxisLables[i];
+                    var j = 0;
+                <td valign="middle">
+                    <select id="@string.Format("ChartAxis{0}",i)" data-axisindex="@i" class="ChartAxis" >
+                        @foreach (var kv in dic)
+                        {
+                            if (j++ == i)
+                            {
+                                <option value="@kv.Key" selected="selected">@kv.Value</option>
+                            }
+                            else
+                            {
+                                <option value="@kv.Key">@kv.Value</option>
+                            }
+                        }
+                    </select>
+                </td>
+                }
+            </tr>
+        </table>
+        @if (Model.ChartYAxisLables.Count > 1) {
+            var i=Model.ChartYAxisLables.Count-1;
+            var dic = Model.ChartYAxisLables[i];
+            //var j=0;
+        <table id="searchCondition" style="margin-top:10px; margin-bottom:10px;float:right;">
+            <tr>
+                <td valign="middle"></td>
+                <td valign="middle">
+                    <select id="@string.Format("ChartAxis{0}",i)" data-axisindex="@i" class="ChartAxis">
+                        <option value="0"></option>
+                        @foreach (var kv in dic)
+                        {
+                            <option value="@kv.Key">@kv.Value</option>
+                            @*if (j++ == i)
+                            {
+                                <option value="@kv.Key" selected="selected">@kv.Value</option>
+                            }
+                            else
+                            {
+                                <option value="@kv.Key">@kv.Value</option>   
+                            }*@                         
+                        }
+                    </select>
+                </td>
+            </tr>
+        </table>
+        }
+        <div style="clear:both;"></div>
+    </div>
+    <div style="width:100%;margin:0 auto;" id="canvasDiv">
+        <canvas id="canvas"></canvas>
+    </div>
+
+}
+
+@section Script{
+<script type="text/javascript">
+
+
+    function adjustHeight() {
+        //debugger;
+        var windowHeight = getWindowHeight();
+        var widdowWidth = $("#main").innerWidth();//  getWindowWidth();
+        console.log(widdowWidth);
+        var footerHeight = $("footer").outerHeight(true);
+        var maxWidth = widdowWidth;
+        var maxHeight = windowHeight - footerHeight - 200;
+        if (maxWidth >= maxHeight * 2) {
+            maxWidth = maxHeight * 2;
+        }
+        else {
+            maxHeight =Math.min( maxHeight, maxWidth / 2);
+        }
+
+        $("#canvasDiv").css("height", maxHeight);
+        $("#canvasDiv").css("width", maxWidth);
+    };
+
+    $(function () {
+        adjustHeight();
+        $(window).resize(adjustHeight);
+        //$(window).scrollTop(70);
+
+        var ctx = document.getElementById("canvas").getContext("2d");
+        window.myBar = new Chart(ctx, barConfig);
+
+        $("select").wijcombobox();
+        $("#btnResetZoom").click(resetZoom);
+        $(".btnBarType").click(function () {
+            setChartType($(this).attr('bartype'));
+        });
+
+        $(".ChartAxis").change(InitChartData);
+
+        InitChartData();
+    });
+    function resetZoom() {
+        //debugger;
+        @if (!string.IsNullOrEmpty( Model.XAxesType) && !string.IsNullOrEmpty( Model.XAxesTimeUnit)){
+            @Html.Raw(string.Format(@"
+        window.myBar.scales['x-axis-0'].options.time.unitStepSize ={0};", Model.XAxesUnitStepSize))
+        }
+        
+        window.myBar.resetZoom();
+    }
+
+    function setChartType(type) {
+        if (barConfig.type == type) {
+            return;
+        }
+
+        @if (!string.IsNullOrEmpty( Model.XAxesType) && !string.IsNullOrEmpty( Model.XAxesTimeUnit)){
+            @Html.Raw(string.Format(@"
+        window.myBar.scales['x-axis-0'].options.time.unitStepSize ={0};", Model.XAxesUnitStepSize))
+        }
+        
+        window.myBar.resetZoom();
+        barConfig.type = type;
+
+        window.myBar.destroy();
+        var ctx = document.getElementById("canvas").getContext("2d");
+        window.myBar = new Chart(ctx, barConfig);
+    }
+
+    function InitChartData() {
+        //debugger;
+        var url = '@Url.Action("InitChart", "Chart")';
+        var axis = new Array();
+        for (var i = 0; i < $(".ChartAxis").length; i++) {
+            var cmb = $($(".ChartAxis")[i]);
+            var obj = { Index: cmb.attr("data-axisindex"), Key: cmb.val() };
+            axis.push(obj);
+        }
+        var postData = { ChartAxis: axis };
+        $.post(url, postData, function (r) {
+            //debugger;
+            window.myBar.destroy();
+            barChartData.labels = r.barConfig.data.labels;
+            barChartData.datasets = r.barConfig.data.datasets;
+
+            barOptions.responsive = r.barConfig.options.responsive;
+            barOptions.hoverMode = r.barConfig.options.hoverMode;
+            barOptions.hoverAnimationDuration = r.barConfig.options.hoverAnimationDuration;
+            barOptions.stacked = r.barConfig.options.stacked;
+
+            barOptions.title = r.barConfig.options.title;
+            //barOptions.scales = {};
+            if (r.barConfig.options.scales.xAxes != null) {
+                barOptions.scales.xAxes = r.barConfig.options.scales.xAxes;
+            }
+            barOptions.scales.yAxes[1].display = false;
+            barOptions.scales.yAxes[1].scaleLabel.display = false;
+            barOptions.scales.yAxes[0] = r.barConfig.options.scales.yAxes[0];
+            if (r.barConfig.options.scales.yAxes.length > 1) {
+                barOptions.scales.yAxes[1] = r.barConfig.options.scales.yAxes[1];
+            }
+            if (r.barConfig.options.zoom != null) {
+                barOptions.zoom = r.barConfig.options.zoom;
+            }
+
+            //barConfig.type = r.barConfig.type;
+            barConfig.data = barChartData;
+            barConfig.options = barOptions;
+
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myBar = new Chart(ctx, barConfig);
+        });
+    }
+</script>
+    <script>
+    var randomScalingFactor = function () {
+        return Math.abs((Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100));
+    };
+    var randomColorFactor = function () {
+        return Math.round(Math.random() * 255);
+    };
+    var randomColor = function () {
+        return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',.7)';
+    };
+
+    var barChartData = {
+        labels: ['loading'],
+        datasets: []
+    };
+    
+    var barOptions = {
+        responsive: true,
+        hoverMode: 'index',
+        hoverAnimationDuration: 400,
+        stacked: false,
+        onClick: function (o, e) {
+            if (window.myBar.scales["x-axis-0"].scaleSizeInUnits != null) {
+                console.log(window.myBar.scales["x-axis-0"].scaleSizeInUnits);
+                window.myBar.scales["x-axis-0"].options.time.unitStepSize = parseInt(Math.max(1, window.myBar.scales["x-axis-0"].scaleSizeInUnits / 10));
+                window.myBar.update(0);
+            }
+        },
+        title: {
+            display: false,
+            text: "@Model.Title"
+        },
+        scales: {
+            xAxes: [{
+            }],
+            yAxes: [{
+                type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                display: true,
+                position: "left",
+                scaleLabel: {
+                    display: true,
+                    labelString: 'label1'
+                },
+                id: "y-axis-1",
+            }, {
+                type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                display: false,
+                scaleLabel: {
+                    display: false,
+                    labelString: 'label2'
+                },
+                position: "right",
+                id: "y-axis-2",
+                gridLines: {
+                    drawOnChartArea: false
+                }
+            }],
+        },
+        zoom: {
+            enabled: true,
+            drag: true,
+            mode: 'x',
+            limits: {
+                max: 10,
+                min: 0.5
+            },
+        }
+    };
+
+    var barConfig={
+        type: '@Model.ChartTypes[0]',
+        data: barChartData,
+        options: barOptions
+    };
+
+    </script>
+}

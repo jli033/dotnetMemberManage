@@ -1,0 +1,109 @@
+﻿
+.icons_24
+{
+    display: inline-block;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.icons_24
+{
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -3px;
+    margin-right: .3em;
+}
+
+.icons_24_bell
+{
+    background-image: url(../Images/bell24.png);
+}
+
+.icons_24_care
+{
+    background-image: url(../Images/care24.png);
+}
+
+.icons_24_graph
+{
+    background-image: url(../Images/graph24.png);
+}
+
+.icons_24_master
+{
+    background-image: url(../Images/master24.png);
+}
+
+.icons_24_user
+{
+    background-image: url(../Images/user24.png);
+}
+
+button, input, select[multiple], textarea {
+	background-image: none;
+}
+.btn {
+	display: inline-block;
+	padding: 6px 12px;
+	margin-bottom: 0px;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1.4285;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+.btn-default {
+	color: #333333;
+	background-color: #ffffff;
+	border-color: #cccccc;
+}
+.btn-primary {
+	color: #ffffff;
+	background-color: #428bca;
+	border-color: #357ebd;
+}
+.btn-success {
+	color: #ffffff;
+	background-color: #5cb85c;
+	border-color: #4cae4c;
+}
+.btn-info {
+	color: #ffffff;
+	background-color: #5bc0de;
+	border-color: #46b8da;
+}
+.btn-warning {
+	color: #ffffff;
+	background-color: #f0ad4e;
+	border-color: #eea236;
+}
+.btn-danger {
+	color: #ffffff;
+	background-color: #d9534f;
+	border-color: #d43f3a;
+}
+.btn-link {
+	font-weight: normal;
+	color: #428bca;
+	cursor: pointer;
+	border-radius: 0;
+}
+.btn-link, .btn-link:active, [disabled].btn-link, fieldset[disabled] .btn-link {
+	background-color: transparent;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.btn-link, .btn-link:hover, .btn-link:focus, .btn-link:active {
+	border-color: transparent;
+}

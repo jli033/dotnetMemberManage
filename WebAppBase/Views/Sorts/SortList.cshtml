@@ -1,0 +1,70 @@
+﻿@using WebAppBase.App_GlobalResources
+@model WebAppBase.Models.Sorts.SortListModel
+
+@{
+    ViewBag.Title = "SortList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+
+    $(function () {
+        $("#sortable").sortable();
+        $("#sortable").disableSelection();
+        $("#save-view-preferences").click(update);
+    });
+
+    function update() {
+        var userPreferenceDetails = new Array();
+        $("#sortable li").each(function (index) {
+            var userPreferenceItem = new Object();
+            //2014年11月05日　李軍　修正 Start
+            userPreferenceItem.Id = $(this).find(".ItemId").val();
+            userPreferenceItem.Id = $(this).find("div input").val();
+            //End
+            userPreferenceItem.IsEnabled = $(this).find($(".EnabledFlag")).attr("checked") == "checked" ? true : false;
+            userPreferenceItem.ColumnOrder = index;
+            userPreferenceDetails.push(userPreferenceItem);
+        });
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Update", "Sorts")',
+            data: JSON.stringify(userPreferenceDetails),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                window.location.href = result.redirectTo;
+            }
+        });
+    }
+
+</script>
+
+@using (Html.BeginForm())
+{
+    <h3>表示順の変更</h3>
+
+    <div id="button_group">
+        @if (Model.Items != null && Model.Items.Count > 0) { 
+        <input type="submit" id="save-view-preferences" style="width:80px" value="@LanguageResource.CmdRegister" />
+        }
+        <input type="submit" name="back" style="width:80px" value="@LanguageResource.CmdBack" />
+    </div>
+           
+    <div id="container_group">
+        <div id="modify-view-elements" style="margin: 20px;">
+            <ul id="sortable">
+                @foreach (var m in Model.Items)
+                {
+                    <li><span id="sort-updown"></span>
+                        <div id="container_sort">
+                            @m.Description
+                            @Html.Hidden("hdnId-" + m.Id, m.Id)
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+    

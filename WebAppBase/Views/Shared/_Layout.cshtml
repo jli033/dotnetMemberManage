@@ -1,0 +1,281 @@
+﻿@using WebAppBase.Configs
+@using Resources
+@{
+    ViewBag.Title = "_Layout";
+    var loginInfoSession = WebAppBase.Sessions.SessionLoginInfo.GetInstance(Session);
+
+    this.Response.Cookies.Remove("OrganizationID");
+    this.Response.Cookies.Add(new System.Web.HttpCookie("OrganizationID", loginInfoSession.OrganizationID));
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>@ViewBag.Title</title>
+
+    <link href="@Url.Content("~/Contents/css/import.css?20141009")" rel="stylesheet" type="text/css" />
+    <!--responsive-menu-->
+    <link href="@Url.Content("~/Contents/responsive-menu/css/responsive-menu.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Contents/responsive-menu/css/styles.css")" rel="stylesheet" />
+
+    <!--responsive-menu-->
+    <script src="@Url.Content("~/Contents/responsive-menu/js/modernizr.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/responsive-menu/js/modernizr-custom.js")" type="text/javascript"></script>
+
+
+    <!--jQuery References-->
+    <script src="@Url.Content("~/Contents/jquery/jquery-1.11.1.min.js?20141009")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/jquery/ui/1.11.0/jquery-ui.min.js?20141009")" type="text/javascript"></script>
+    <!--responsive-menu-->
+    <script src="@Url.Content("~/Contents/responsive-menu/js/responsive-menu.js")" type="text/javascript"></script>
+
+    <!--bootstrap css-->
+    @*<link href="@Url.Content("~/Contents/bootstrap-3.0.0/bootstrap.css")" rel="stylesheet" type="text/css" />*@
+    <!-- Wijmo Bootstrap CSS -->
+    @*<link href="@Url.Content("~/Contents/bootstrap-3.0.0/bootstrap-wijmo.css")" rel="stylesheet" type="text/css" />*@
+
+    <!--Wijmo Widgets CSS-->
+    <link href="@Url.Content("~/Contents/jquery-wijmo/jquery.wijmo-pro.all.3.20142.48.min.css?20141009")" rel="stylesheet" type="text/css" />
+
+    <!--Theme-->
+    <link href="@Url.Content("~/Contents/jquery-wijmo/themes/aristo/jquery-wijmo.css?20141009")" rel="stylesheet" type="text/css" />
+    @*<link href="@Url.Content("~/Contents/jquery-wijmo/themes/bootstrap/jquery-ui.css?20141009")" rel="stylesheet" type="text/css" />*@
+
+    <!--Wijmo Widgets JavaScript-->
+    <script src="@Url.Content("~/Contents/jquery-wijmo/jquery.wijmo-open.all.3.20142.48.min.js?20141009")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/jquery-wijmo/jquery.wijmo-pro.all.3.20142.48.min.js?20141009")" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/Contents/jquery-wijmo/interop/wijmo.data.ajax.3.20133.29.js")" type="text/javascript"></script>
+
+    <!--bootstrap js-->
+    @*<script src="@Url.Content("~/Contents/bootstrap-3.0.0/bootstrap.js")" type="text/javascript"></script>*@
+
+    <!--knockout-->
+    <script src="@Url.Content("~/Contents/jquery-wijmo/external/knockout-2.2.0.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/jquery-wijmo/interop/knockout.wijmo.3.20133.29.js")" type="text/javascript"></script>
+
+    <!--Culture-->
+    <script src="@Url.Content("~/Contents/jquery-wijmo/external/globalize.culture.ja-JP.js?20141009")" type="text/javascript"></script>
+
+    <!--toastr-->
+    <link href="@Url.Content("~/Contents/toastr/toastr.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/Contents/toastr/toastr.js")"></script>
+
+
+    @RenderSection("PrepareScriptBeforeRequestJS", false)
+    <!--RequireJs-->
+    <script src="@Url.Content("~/Contents/jquery-wijmo/external/require.js?20141009")" type="text/javascript"></script>
+
+    <!--Custom-->
+    <script src="@Url.Content("~/Contents/Scripts/com.js?20120913")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/Scripts/OrderList.js?20120913")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/Scripts/InputAssistance.js?20120913")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/Scripts/jquery.formatCurrency-1.4.0.js?20120913")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Contents/Scripts/string.Format.js?20120913")" type="text/javascript"></script>
+
+
+    <script src="@Url.Content("~/Contents/custom-extensions/fishspeciesselectmenu.js?20120913")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+    onerror = handleErr
+
+    function handleErr(msg, url, l) {
+        if ($("#loading").length > 0) {
+            $("#loading").detach();
+            //$("#wrapper").detach();
+            $("html").css("overflow-y", "scroll");
+            alert(msg)
+            //window.location = '@Url.Action("index","Home")';
+        }
+        return true
+    }
+
+        var state = {
+            title: document.title,
+            url: document.location.href,
+        };
+        history.pushState(state, document.title, document.location.href);
+        window.addEventListener('popstate', function (event) {
+            history.pushState(state, document.title, document.location.href);
+        },false);
+
+
+    //$("html").css("overflow-y", "hidden");
+
+    function getWindowHeight() {
+        var wh = $(window).height();
+        return Math.max(wh, 892);
+    };
+
+    function getWindowWidth() {
+        var wh = $(window).width()
+        return Math.max(wh, 768);
+    };
+
+    function isExitsFunction(funcName) {
+        try {
+            if (typeof (eval(funcName)) == "function") {
+                return true;
+            }
+        } catch (e) { }
+        return false;
+    }
+
+    $(document).keydown(function (event) {
+        switch (event.keyCode) {
+            case 13:
+                var e = $(document.activeElement);
+                if (e != null && e.prop("tagName").toLowerCase() == "textarea") {
+                    return true;
+                }
+                else if (e != null && e.attr("type") != undefined && (e.attr("type").toLowerCase() == "button" || e.attr("type").toLowerCase() == "submit")) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            default:
+                break;
+        }
+    });
+
+    $(document).ready(function () {
+        $("#loading").css("margin-bottom", screen.height);
+
+        //var btn = $.fn.button.noConflict(); // reverts $.fn.button to jqueryui btn
+        //$.fn.btn = btn; // assigns bootstrap button functionality to $.fn.btn
+
+        var menu = $('.rm-nav').rMenu({
+            minWidth: '960px',
+        });
+
+        setInterval(live, 60000);
+    });
+
+    function live() {
+        var url = '@Url.Action("Live", "Home")';
+        $.post(url);
+    }
+
+    $(document).ready(function () {
+        $("#flyoutmenu").wijmenu();
+        $("#flyoutmenu").wijmenu(
+            "option", "animation", { option: { direction: "right" }, duration: 50, easing: null });
+        $("input[type='checkbox']").wijcheckbox();
+    });
+
+
+    function logoutSystem() {
+        var bl = confirm("ログアウトします。よろしいですか？");
+        if (bl) {
+            $("Form[name=LogOffForm]").submit();
+        }
+    }
+
+    function loginSystem() {
+        var url = '@Url.Action("Index", "Account", new { OrganizationID =@loginInfoSession.OrganizationID })';
+        this.window.location = url;
+    }
+
+    function SetDateFormatOnSubmit(selector) {
+        $("Form").submit(function () {
+            SetDateFormatDirect(selector);
+            //$(selector).wijinputdate("option", "dateFormat", "yyyy/MM/dd");
+            //setTimeout(function () {
+            //    $(selector).wijinputdate("option", "dateFormat", "yyyy/MM/dd(ddd)");
+            //}, 500);
+        });
+    }
+
+    function SetDateFormatDirect(selector) {
+
+        $(selector).wijinputdate("option", "dateFormat", "yyyy/MM/dd");
+        setTimeout(function () {
+            $(selector).wijinputdate("option", "dateFormat", "yyyy/MM/dd(ddd)");
+        }, 500);
+
+    }
+
+
+    </script>
+
+    <style type="text/css">
+        .field-validation-error {
+            color: red;
+        }
+    </style>
+
+    @RenderSection("Style", false)
+    @RenderSection("PrepareScript", false)
+</head>
+<body class="">
+
+    <div id="loading" style=" text-align:center;font-size:3em; font-weight:bold ;height:1800px; padding-top:100px;background-color:white;">Loading...</div>
+
+    <div id="wrapper" style="width:95%;  min-width:960px;">
+        <header role="banner" style="z-index:1000; width:100%;margin:0 auto;position:inherit;">
+            <div style="float:left; font-size:30px;  margin-left:20px; margin-right:10px; color:white; line-height:70px; vertical-align:middle; ">
+                @SystemConfig.SystemTitle
+            </div>
+
+            <div class="rm-container">
+                <nav class="rm-nav rm-nojs rm-lighten">
+                    @Html.Action("GetMenuHTML","Home")
+                </nav>
+            </div>
+
+
+            <div style="height:30px; margin-top:40px; margin-right:5px; float:right;color:white;">
+                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { @class = "", @name = "LogOffForm", style = "margin-right: 0px;" }))
+                {
+                    @Html.Hidden("OrganizationID", loginInfoSession.OrganizationID);
+                    <span>こんにちは</span>
+                    <span>
+                        @if (loginInfoSession != null)
+                        {@Html.Raw(string.Format("{0}さん", loginInfoSession.UserName));
+                        }
+                        else
+                        { @Html.Raw("○○○さん");
+                        }
+                    </span>
+
+                    <a href="#" style="margin-bottom:5px; margin-left:20px;color:white;margin-right:10px;" onclick="logoutSystem()">ログアウト</a>
+                }
+            </div>
+            <div style="clear:both;"></div>
+        </header>
+
+        <div style="width:98%; margin:0 auto;">
+            <div id="main" style="margin-top:0px; margin-left:0px; width:100%; float:none;">
+                @RenderBody()
+            </div>
+        </div>
+        <footer style="z-index:99">
+            <div id="copyright">
+                Copyright(C) 2014 Pacific System Co.,Ltd. All rights reserved.
+            </div>
+            <div id="pagetop">
+                <img src='@Url.Content("~/Contents/images/System/Pagetop_off.gif")' alt="pagetop">
+            </div>
+        </footer>
+    </div>
+    @RenderSection("Script", false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#loading").detach();
+                $("html").css("overflow-y", "scroll");
+                if (isExitsFunction("adjustGridHeight"))
+                {
+                    adjustGridHeight();
+                }
+            }, 100);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+﻿.btn {
+	display: inline-block;
+	padding: 6px 12px;
+	margin-bottom: 0px;
+	font-size: 14px;
+    font-family: "メイリオ", "Meiryo UI","Hiragino Kaku Gothic ProN",Meiryo,"ＭＳ Ｐゴシック","ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","MS PGothic",Sans-Serif;
+	font-weight: normal;
+	line-height: 1.4285;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+.btn-default {
+	color: #333333;
+	background-color: #eaeaea;
+	border-color: #cccccc;
+    text-decoration:none;
+}
+.btn-primary {
+	color: #ffffff;
+	background-color: #428bca;
+	border-color: #357ebd;
+}
+.btn-success {
+	color: #ffffff;
+	background-color: #5cb85c;
+	border-color: #4cae4c;
+}
+.btn-info {
+	color: #ffffff;
+	background-color: #5bc0de;
+	border-color: #46b8da;
+}
+.btn-warning {
+	color: #ffffff;
+	background-color: #f0ad4e;
+	border-color: #eea236;
+}
+.btn-danger {
+	color: #ffffff;
+	background-color: #d9534f;
+	border-color: #d43f3a;
+}
+.btn-link {
+	font-weight: normal;
+	color: #428bca;
+	cursor: pointer;
+	border-radius: 0;
+}
+.btn-link, .btn-link:active, [disabled].btn-link, fieldset[disabled] .btn-link {
+	background-color: transparent;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.btn-link, .btn-link:hover, .btn-link:focus, .btn-link:active {
+	border-color: transparent;
+}
+
+[disabled].btn {
+    /*background-color: #fff;*/
+    border-color: #ccc;
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    opacity: 0.65;
+}
